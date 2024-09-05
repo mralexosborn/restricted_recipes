@@ -10,6 +10,9 @@ body {
 }
 
 .container {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center items */
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -49,9 +52,9 @@ input[type="submit"]:hover {
 }
 
 .recipe-container {
-    display: flex; /* Use flexbox for layout */
-    flex-direction: row; /* Default to row layout */
-    align-items: flex-start; /* Align items at the start */
+    display: flex;
+    flex-direction: column; /* Stack image and content vertically on small screens */
+    align-items: center; /* Center items */
     margin-top: 20px; /* Space between title and content */
 }
 
@@ -108,21 +111,49 @@ textarea {
     .recipe-container {
         flex-direction: column; /* Stack vertically on narrow screens */
         align-items: center; /* Center items */
+        font-size: 0.7em;
     }
 
     .recipe-image {
         margin-right: 0; /* Remove right margin */
         margin-bottom: 20px; /* Add bottom margin for spacing */
+        max-width: 600px;
+    }
+
+    .input-section {
+        width: 100%; /* Full width on small screens */
+        padding: 10px; /* Reduce padding */
+    }
+
+    input[type="text"], input[type="submit"] {
+        width: 100%; /* Full width for inputs */
+        font-size: 1em; /* Adjust font size */
+    }
+
+    .recipe-image {
+        max-width: 100%; /* Responsive image */
+        height: auto; /* Maintain aspect ratio */
+    }
+
+    .recipe-content {
+        text-align: center; /* Center text on small screens */
+    }
+
+    .sidebar {
+        width: 100px; /* Adjust width as needed */
+        float: right; /* Align to the right */
+        background-color: #ffffad; /* Light green background */
+        font-size: 0.7em; /* Adjust font size */
+        padding: 10px;
     }
 }
 
 .sidebar {
     width: 200px; /* Adjust width as needed */
     float: right; /* Align to the right */
-    margin-left: 20px; /* Space between content and sidebar */
-    background-color: #ccffcc; /* Light green background */
-    border: 3px solid #000; /* Black border */
+    background-color: #ffffad; /* Light green background */
     padding: 10px;
+    overflow-y: auto;
 }
 
 .sidebar ul {
@@ -147,20 +178,6 @@ textarea {
     background-color: #d32f2f;
 }
 
-/* New sidebar styles */
-#sidebar {
-    width: 200px; /* Adjust width as needed */
-    background-color: #FFFF99; /* Light yellow background */
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto; /* Allow scrolling if content exceeds height */
-    height: 100vh; /* Set sidebar height to full viewport */
-}
-
-#sidebar h3 {
-    margin-top: 0; /* Added from index.php */
-}
-
 #recipeSidebar {
     list-style-type: none; /* Added from index.php */
     padding: 0; /* Added from index.php */
@@ -181,5 +198,17 @@ textarea {
     box-sizing: border-box; /* Added from index.php */
     overflow-y: auto; /* Enable scrolling within the main content if needed */
     max-height: 100vh; /* Ensure main content does not exceed viewport height */
+}
+
+#loadingBar {
+    width: 100%; /* Full width */
+    height: 20px;
+    background-color: #4caf50;
+}
+
+@media (min-width: 600px) {
+    #sidebar {
+        width: 400px; /* Fixed width on larger screens */
+    }
 }
 

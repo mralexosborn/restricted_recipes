@@ -3,7 +3,6 @@ require_once 'vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-//webhook test 2
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -85,7 +84,9 @@ function generateRecipe($ingredients) {
 function cleanRecipeText($text) {
     // Remove extra spaces and newlines
     $text = preg_replace('```([^`]*)```','',$text);
+    $text = preg_replace('"([^`]*)"','',$text);
     $text = str_replace('`', '', $text); // Remove backticks
+    $text = str_replace('```', '', $text); // Remove backticks
     $text = str_replace('Recipe: ', '', $text); // Remove backticks   
     $text = preg_replace('/\s+/', ' ', $text); // Replace multiple spaces with a single space
     $text = preg_replace('/\n+/', ' ', $text); // Replace multiple newlines with a single space
@@ -301,21 +302,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restricted Recipes</title>
+    <title>strictly recipes</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
 </head>
 <body>
-<div id="sidebar">
-            <h3>Recently Generated Recipes</h3>
-            <button id="clearAllRecipes">Clear All</button>
+<div class="sidebar">
+            <h3>prev recipes</h3>
+            <!-- <button id="clearAllRecipes">Clear All</button> -->
             <ul id="recipeSidebar"></ul>
         </div>
     <div class="main-content">
         <div class="container">
             <div class="input-section">
-                <h1>Restricted Recipes</h1>
+                <h1>strictly recipes</h1>
                 <p>FODMAP friendly recipes for people tired of checking lists</p>
-                <form method="POST">
+                <form method="POST" class="recipe-form">
                     <input type="text" id="ingredients" name="ingredients" placeholder="What's in your fridge?" required>
                     <input type="submit" value="Get Cookin'">
                 </form>
