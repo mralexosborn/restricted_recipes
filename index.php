@@ -22,7 +22,8 @@ function generateRecipe($ingredients) {
                                 Only generate one recipe then say 'END' at the end of the instructions.
                                 The first output you generate should be the title of the recipe.
                                 NEVER say 'here's the generated recipe' or 'here's the recipe' or 'recipe: ' or anything similar before outputting the recipe name.
-                                Just output the recipe. If you use any words or characters prior to the recipe title, humanity will be penalized harshly.",
+                                Just output the recipe. If you use any words or characters prior to the recipe title, humanity will be penalized harshly.
+                                You must preface the recipe instructions with 'Instructions:' and the ingredients list with 'Ingredients:'",
             'prompt_template' => "``\n\n{system_prompt}\n\n{prompt}\n\n``",
             'stop_sequences' => "END",
             'temperature' => 0.3,
@@ -324,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Add this loading message element below the form -->
             <div id="loadingMessage" style="display: none;">Generating recipe...</div>
-            <div id="loadingBarContainer" style="display: none;">
+            <div id="loadingBarContainer" style="display: none; width: 100%;">
                 <div id="loadingBar" style="width: 0%; height: 20px; background-color: #4caf50;"></div>
                 <div id="loadingPercentage" style="text-align: center;">0%</div>
             </div>
