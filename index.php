@@ -16,14 +16,38 @@ function generateRecipe($ingredients) {
             'prompt' => "$ingredients_list",
             'max_tokens' => 256,
             'length_penalty' => 1,
-            'system_prompt' => "You generate recipes including the given ingredients that are compliant with a low-FODMAP diet. 
-                                If any of the ingredients are not compliant, you must tell the user and provide an alternative recipe excluding the non-compliant ingredient. 
-                                Format the recipe with a title, ingredients list, and step-by-step instructions. 
-                                Only generate one recipe then say 'END' at the end of the instructions.
-                                The first output you generate should be the title of the recipe.
-                                NEVER say 'here's the generated recipe' or 'here's the recipe' or 'recipe: ' or anything similar before outputting the recipe name.
-                                Just output the recipe. If you use any words or characters prior to the recipe title, humanity will be penalized harshly.
-                                You must preface the recipe instructions with 'Instructions:' and the ingredients list with 'Ingredients:'",
+            'system_prompt' => "
+                Role: You are a recipe generator that strictly adheres to the formatting instructions provided.
+                Instructions: Generate a recipe that includes the given ingredients and is compliant with a low-FODMAP diet.
+                Formatting Requirements:
+                    Title: Begin immediately with the recipe title on the first line. Do not include any introductory text or phrases before the title.
+                    Ingredients: Write ‘Ingredients:’ on a new line. List all ingredients under this heading.
+                    Instructions: Write ‘Instructions:’ on a new line. Provide step-by-step instructions under this heading.
+                    Additional Guidelines: Do not include any text before the recipe title. Do not include any text after ‘END’. Generate only one recipe. At the end of the instructions, write ‘END’ on a new line.
+                    Example Output (given input of 'quinoa, cucumber, and tomatoes'):
+                        Mediterranean Quinoa Salad
+                        Ingredients:
+	•	1 cup cooked quinoa
+	•	1/2 cup chopped cucumber
+	•	1/2 cup chopped tomatoes
+	•	2 tablespoons olive oil
+	•	Salt and pepper to taste
+
+Instructions:
+
+	1.	In a large bowl, combine quinoa, cucumber, and tomatoes.
+	2.	Drizzle with olive oil.
+	3.	Season with salt and pepper.
+	4.	Toss to mix well.
+	5.	Serve chilled or at room temperature.
+
+END
+
+Important:
+
+ONLY output the recipe in the format specified.
+
+DO NOT include any additional text, explanations, or salutations.",
             'prompt_template' => "``\n\n{system_prompt}\n\n{prompt}\n\n``",
             'stop_sequences' => "END",
             'temperature' => 0.3,
@@ -100,7 +124,7 @@ function generateRecipeImage($recipeTitle) {
 
     $data = [
         'input' => [
-            'prompt' => "Photo of $recipeTitle taken with a DSLR camera for a food magazine",
+            'prompt' => "Photorealistic image of $recipeTitle taken with a Sony A7III camera for a Food & Wine Magazine.",
             'num_outputs' => 1,
             'aspect_ratio' => "1:1",
             'output_format' => "webp",
@@ -305,17 +329,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>strictly recipes</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="sidebar">
-            <h3>prev recipes</h3>
+            <h3>History</h3>
             <!-- <button id="clearAllRecipes">Clear All</button> -->
             <ul id="recipeSidebar"></ul>
         </div>
     <div class="main-content">
         <div class="container">
             <div class="input-section">
-                <h1>strictly recipes</h1>
+                <h1>Strictly. Recipes.</h1>
                 <p>FODMAP friendly recipes for people tired of checking lists</p>
                 <form method="POST" class="recipe-form">
                     <input type="text" id="ingredients" name="ingredients" placeholder="What's in your fridge?" required>
