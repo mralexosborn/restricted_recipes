@@ -284,7 +284,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Call this function on page load to populate the sidebar
             updateRecipeSidebar();
-
             const clearAllButton = document.getElementById('clearAllRecipes');
             if (clearAllButton) {
                 clearAllButton.addEventListener('click', clearAllRecipes);
@@ -309,8 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strictly. Recipes.</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet"></head>
 <body>
 <div class="sidebar">
             <h3>History</h3>
