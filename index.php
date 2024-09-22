@@ -17,37 +17,17 @@ function generateRecipe($ingredients) {
             'max_tokens' => 256,
             'length_penalty' => 1,
             'system_prompt' => "
-                Role: You are a recipe generator that strictly adheres to the formatting instructions provided.
-                Instructions: Generate a recipe that includes the given ingredients and is compliant with a low-FODMAP diet.
-                Formatting Requirements:
-                    Title: Begin immediately with the recipe title on the first line. Do not include any introductory text or phrases before the title.
-                    Ingredients: Write ‘Ingredients:’ on a new line. List all ingredients under this heading.
-                    Instructions: Write ‘Instructions:’ on a new line. Provide step-by-step instructions under this heading.
-                    Additional Guidelines: Do not include any text before the recipe title. Do not include any text after ‘END’. Generate only one recipe. At the end of the instructions, write ‘END’ on a new line.
-                    Example Output (given input of 'quinoa, cucumber, and tomatoes'):
-                        Mediterranean Quinoa Salad
-                        Ingredients:
-	•	1 cup cooked quinoa
-	•	1/2 cup chopped cucumber
-	•	1/2 cup chopped tomatoes
-	•	2 tablespoons olive oil
-	•	Salt and pepper to taste
+                Generate a low-FODMAP recipe that includes the following ingredients.
 
-Instructions:
+Formatting Requirements:
 
-	1.	In a large bowl, combine quinoa, cucumber, and tomatoes.
-	2.	Drizzle with olive oil.
-	3.	Season with salt and pepper.
-	4.	Toss to mix well.
-	5.	Serve chilled or at room temperature.
+	•	Write the only recipe title on the first line (don't include 'Low-FODMAP' in the title).
+	•	Write 'Ingredients:' on the next line, then list all ingredients.
+	•	Write 'Instructions:' on the next line, then provide step-by-step instructions.
+	•	At the end, write 'END' on a new line.
+    •   Important: DO NOT FORGET TO INCLUDE THE TITLE. DO NOT FORGET TO INCLUDE THE INGREDIENTS. DO NOT FORGET TO INCLUDE THE INSTRUCTIONS.
 
-END
-
-Important:
-
-ONLY output the recipe in the format specified.
-
-DO NOT include any additional text, explanations, or salutations.",
+Do not include any text before or after the recipe. Only output the recipe in this format including the title, ingredients, and instructions.",
             'prompt_template' => "``\n\n{system_prompt}\n\n{prompt}\n\n``",
             'stop_sequences' => "END",
             'temperature' => 0.3,
@@ -119,12 +99,12 @@ function cleanRecipeText($text) {
     return $text;
 }
 
-function generateRecipeImage($recipeTitle) {
+function generateRecipeImage($recipeTitle,$ingredientsText) {
     $api_token = $_ENV['REPLICATE_API_TOKEN'];
 
     $data = [
         'input' => [
-            'prompt' => "Photorealistic image of $recipeTitle taken with a Sony A7III camera for a Food & Wine Magazine.",
+            'prompt' => "Photo of $recipeTitle taken with a Sony A7III camera for a Food & Wine Magazine. Make sure to include the main ingredients from $ingredientsText",
             'num_outputs' => 1,
             'aspect_ratio' => "1:1",
             'output_format' => "webp",
@@ -218,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $instructionsArray = explode("\n", $instructionsText);
 
     // Generate the image using the recipe title
-    $imageUrl = generateRecipeImage($recipeTitle);
+    $imageUrl = generateRecipeImage($recipeTitle,$ingredientsText);
     $recipeGenerated = true; // Set the flag to true
 
     // Show the output section by setting it to display block
@@ -327,9 +307,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>strictly recipes</title>
+    <title>Strictly. Recipes.</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="sidebar">
@@ -381,12 +361,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        function clearAllRecipes() {
-            if (confirm('Are you sure you want to clear all recently generated recipes?')) {
-                localStorage.removeItem('recentRecipes');
-                updateRecipeSidebar();
+        function updateRecipeSidebar() {
+            const sidebar = document.getElementById('recipeSidebar');
+            if (!sidebar) {
+                console.error('Sidebar element not found');
+                return; // Exit if the sidebar is not found
             }
+            sidebar.innerHTML = ''; // Clear existing sidebar content
+            const recipes = JSON.parse(localStorage.getItem('recentRecipes')) || [];
+            recipes.forEach((recipe) => {
+                const listItem = document.createElement('li');
+                listItem.innerText = recipe.title;
+                listItem.onclick = () => viewRecipe(recipe); // Set click handler
+                sidebar.appendChild(listItem);
+            });
         }
+
+        function viewRecipe(recipe) {
+            document.querySelector('.output-section h2').innerText = recipe.title;
+            document.querySelector('.recipe-content').innerHTML = `
+                <h4 style='font-weight: bold;'>Ingredients:</h4>
+                ${recipe.ingredients.map(ingredient => `<p>${ingredient}</p>`).join('')}
+                <h4 style='font-weight: bold;'>Instructions:</h4>
+                ${recipe.instructions.map(instruction => `<p>${instruction}</p>`).join('')}
+            `;
+            if (recipe.imageUrl) {
+                document.querySelector('.recipe-image').src = recipe.imageUrl;
+            }
+            document.querySelector('.output-section').style.display = 'block'; // Show output section
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRecipeSidebar(); // Call this function to populate the sidebar on page load
+        });
     </script>
 </body>
 </html>

@@ -32,16 +32,21 @@ body {
 
 .input-section {
     text-align: center;
+    align-items: center;
     margin-bottom: 20px;
 }
 
 input[type="text"], input[type="submit"] {
-    border-radius: 10px; /* Rounded corners */
     padding: 10px;
     margin: 5px;
     font-size: 16px;
     color: #000; /* Black text */
-    width: 100%;
+}
+
+input[type="text"] {
+    width: 80%;  
+    border-radius: 5px; /* Rounded corners */
+
 }
 
 input[type="submit"] {
@@ -49,6 +54,9 @@ input[type="submit"] {
     color: #fff; /* White text */
     cursor: pointer;
     text-shadow: 1px 1px 2px #000; /* Text shadow */
+    width: 35%;
+    border-radius: 25px; /* Rounded corners */
+
 }
 
 input[type="submit"]:hover {
@@ -60,7 +68,7 @@ input[type="submit"]:hover {
 }
 
 .recipe-image {
-    max-width: 600px;
+    max-width: 75%;
     height: auto;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
@@ -121,20 +129,14 @@ textarea {
         font-size: 0.7em;
     }
 
-    .recipe-image {
-        margin-right: 0; /* Remove right margin */
-        margin-bottom: 20px; /* Add bottom margin for spacing */
-        max-width: 200px;
-    }
-
     .input-section {
         width: 100%; /* Full width on small screens */
         padding: 10px; /* Reduce padding */
     }
 
     input[type="text"], input[type="submit"] {
-        width: 100%; /* Full width for inputs */
-        font-size: 1em; /* Adjust font size */
+        font-size: 0.6em; /* Adjust font size */
+        min-width: 100px;
     }
 
     .recipe-content {
