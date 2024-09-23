@@ -7,7 +7,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-function generateRecipe($ingredients) {
+function generateRecipe($ingredients,$dietaryRestriction) {
     $api_token = $_ENV['REPLICATE_API_TOKEN'];
     $ingredients_list = implode(', ', $ingredients);
 
@@ -17,20 +17,16 @@ function generateRecipe($ingredients) {
             'max_tokens' => 256,
             'length_penalty' => 1,
             'system_prompt' => "
-                Generate a low-FODMAP recipe that includes the following ingredients.
-
-Formatting Requirements:
-
-	•	Write the only recipe title on the first line (don't include 'Low-FODMAP' in the title).
-	•	Write 'Ingredients:' on the next line, then list all ingredients.
-	•	Write 'Instructions:' on the next line, then provide step-by-step instructions.
-	•	At the end, write 'END' on a new line.
-    •   Important: DO NOT FORGET TO INCLUDE THE TITLE. DO NOT FORGET TO INCLUDE THE INGREDIENTS. DO NOT FORGET TO INCLUDE THE INSTRUCTIONS.
-
-Do not include any text before or after the recipe. Only output the recipe in this format including the title, ingredients, and instructions.",
+                Generate one recipe that includes the following ingredients and is $dietaryRestriction friendly. 
+                Write the only recipe title on the first line.
+                Write 'Ingredients:' on the next line and enumerate all ingredients in a bulleted list. 
+                Write 'Instructions:' on the next line and enumerate the instructions in a bulleted list.
+                At the end, write 'END' on a new line.
+                DO NOT FORGET TO INCLUDE THE TITLE. DO NOT FORGET TO INCLUDE THE INGREDIENTS. DO NOT FORGET TO INCLUDE THE INSTRUCTIONS.
+                Only output the recipe in this format including the title, ingredients, and instructions.",
             'prompt_template' => "``\n\n{system_prompt}\n\n{prompt}\n\n``",
             'stop_sequences' => "END",
-            'temperature' => 0.3,
+            'temperature' => 0.2,
         ]
     ];
 
@@ -168,7 +164,11 @@ $recipeGenerated = false; // Flag to check if the recipe is generated
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ingredients = explode(',', $_POST['ingredients']);
     $ingredients = array_map('trim', $ingredients);
-    $recipe = generateRecipe($ingredients);
+     // Get the selected dietary restriction
+    $dietaryRestriction = $_POST['dietaryRestrictions'];
+    
+    // Generate the recipe based on dietary restrictions
+    $recipe = generateRecipe($ingredients, $dietaryRestriction);
     
     // Assuming $recipe contains the full recipe text
     $splitPattern = '/Ingredients:/'; // Pattern to split on "Ingredients" 
@@ -323,11 +323,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="main-content">
         <div class="container">
             <div class="input-section">
-                <h1>Strictly. Recipes.</h1>
-                <p>FODMAP friendly recipes for people tired of checking lists</p>
+                <h1>Strictly Recipes</h1>
+                <p id="tagline">Recipes for people tired of scrolling</p>
                 <form method="POST" class="recipe-form">
                     <input type="text" id="ingredients" name="ingredients" placeholder="What's in your fridge?" required>
-                    <input type="submit" value="Get Cookin'">
+                    <select id="dietaryRestrictions" name="dietaryRestrictions">
+                        <option value="none">No Restrictions</option>
+                        <option value="gluten-free">Gluten-Free</option>
+                        <option value="keto">Keto</option>
+                        <option value="low-fodmap">Low-FODMAP</option>
+                        <option value="vegan">Vegan</option>
+                    </select>
+                    <input type="submit" value="Cook!">
                 </form>
             </div>
 
@@ -338,7 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div id="loadingPercentage" style="text-align: center;">0%</div>
             </div>
             <div class="output-section" style="display: <?php echo $recipeGenerated ? 'block' : 'none'; ?>;"> <!-- Show if recipe is generated -->
-                <h2 style='font-weight: bold;'><?php echo $recipeTitle; ?></h2> <!-- Bold title -->
+                <h2 id="recipe-title"><?php echo $recipeTitle; ?></h2> <!-- Bold title -->
                 <div class="recipe-container">
                     <?php if ($imageUrl): ?>
                         <img src="<?php echo htmlspecialchars($imageUrl); ?>" alt="Generated Recipe Image" class="recipe-image">

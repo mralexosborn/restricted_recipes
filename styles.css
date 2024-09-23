@@ -26,8 +26,9 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff; /* White background for content */
+    background-color: rgba(255, 255, 255, 0.8); /* White background for content */
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    border-radius: 10px;
 }
 
 .input-section {
@@ -36,25 +37,47 @@ body {
     margin-bottom: 20px;
 }
 
-input[type="text"], input[type="submit"] {
+input[type="text"], #dietaryRestrictions, input[type="submit"] {
     padding: 10px;
-    margin: 5px;
-    font-size: 16px;
-    color: #000; /* Black text */
+    font-size: 14px;
+    color: #000;
+    border-color: #000;
+    border-width: 0px;
+    font-family: "Josefin Sans", sans-serif; /* Black text */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 input[type="text"] {
     width: 80%;  
+    text-align: center;
+    margin: 0px;
     border-radius: 5px; /* Rounded corners */
 
+}
+
+#dietaryRestrictions {
+    width: 40%;
+    border-radius: 5px; /* Rounded corners */
+    padding-left: 2px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+
+}   
+
+#recipe-title {
+    color: #333;
+    font-size: 1.5em;
+    margin-top: 0;
+    font-weight: bold;
 }
 
 input[type="submit"] {
     background-color: var(--accent-color); /* Bright orange */
     color: #fff; /* White text */
     cursor: pointer;
-    text-shadow: 1px 1px 2px #000; /* Text shadow */
-    width: 35%;
+    margin: 5px;
+    width: 15%;
     border-radius: 25px; /* Rounded corners */
 
 }
@@ -78,6 +101,14 @@ input[type="submit"]:hover {
     text-align: left; /* Align text to the left for recipe content */
 }
 
+.main-content {
+    flex-grow: 1; /* Allow main content to grow and fill available space */
+    padding: 20px; /* Added from index.php */
+    box-sizing: border-box; /* Added from index.php */
+    overflow-y: auto; /* Enable scrolling within the main content if needed */
+    max-height: 100vh; /* Ensure main content does not exceed viewport height */
+}
+
 h3, h4 {
     margin-top: 20px;
 }
@@ -85,6 +116,15 @@ h3, h4 {
 h1 {
     color: #4CAF50;
     font-size: 2em;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+#tagline {
+    margin-top: 2px;
+    font-size: 0.91em;
+    padding: 3px;
+    margin-bottom: 5px;
 }
 
 h2 {
@@ -115,12 +155,6 @@ textarea {
     margin-top: 20px;
 }
 
-.recipe-title {
-    font-size: 2em;
-    color: var(--header-color);
-    text-align: center;
-}
-
 /* Responsive Design */
 @media (max-width: 600px) {
     .recipe-container {
@@ -129,18 +163,21 @@ textarea {
         font-size: 0.7em;
     }
 
+    .container {
+        padding-top: 10px;
+    }
+
     .input-section {
         width: 100%; /* Full width on small screens */
         padding: 10px; /* Reduce padding */
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+        padding-top: 0px;
     }
 
-    input[type="text"], input[type="submit"] {
+    input[type="text"], input[type="submit"], #dietaryRestrictions {
         font-size: 0.6em; /* Adjust font size */
-        min-width: 100px;
-    }
-
-    .recipe-content {
-        text-align: center; /* Center text on small screens */
+        min-width: 50px;
     }
 
     .sidebar {
@@ -150,6 +187,24 @@ textarea {
         font-size: 0.7em; /* Adjust font size */
         padding: 10px;
     }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-top: 5px;
+    }
+    
+    #tagline {
+        font-size: 0.70em;
+    }
+
+    #recipe-title {
+        font-size: 1em;
+    }   
+
 }
 
 .sidebar {
@@ -158,19 +213,6 @@ textarea {
     padding: 15px;
     overflow-y: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-}
-
-#clearAllRecipes {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#clearAllRecipes:hover {
-    background-color: #d32f2f;
 }
 
 #recipeSidebar {
@@ -185,14 +227,6 @@ textarea {
 
 #recipeSidebar li:hover {
     text-decoration: underline; /* Added from index.php */
-}
-
-.main-content {
-    flex-grow: 1; /* Allow main content to grow and fill available space */
-    padding: 20px; /* Added from index.php */
-    box-sizing: border-box; /* Added from index.php */
-    overflow-y: auto; /* Enable scrolling within the main content if needed */
-    max-height: 100vh; /* Ensure main content does not exceed viewport height */
 }
 
 #loadingBar {
@@ -234,3 +268,4 @@ button:hover {
 		background-position: 0% 50%;
 	}
 }
+
