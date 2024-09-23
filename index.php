@@ -333,6 +333,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="sidebar">
+    <div id="feedback">  
+            <a href="mailto:strictlyrecipes@gmail.com">Feedback? Email me</a>
+    </div>
             <h3>History</h3>
             <!-- <button id="clearAllRecipes">Clear All</button> -->
             <ul id="recipeSidebar"></ul>
