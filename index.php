@@ -17,16 +17,33 @@ function generateRecipe($ingredients,$dietaryRestriction) {
             'max_tokens' => 256,
             'length_penalty' => 1,
             'system_prompt' => "
-                Generate one recipe that includes the following ingredients and is $dietaryRestriction friendly. 
-                Write the only recipe title on the first line.
-                Write 'Ingredients:' on the next line and enumerate all ingredients in a bulleted list. 
-                Write 'Instructions:' on the next line and enumerate the instructions in a bulleted list.
-                At the end, write 'END' on a new line.
-                DO NOT FORGET TO INCLUDE THE TITLE. DO NOT FORGET TO INCLUDE THE INGREDIENTS. DO NOT FORGET TO INCLUDE THE INSTRUCTIONS.
-                Only output the recipe in this format including the title, ingredients, and instructions.",
+                Generate one recipe that includes the following ingredients: $ingredients_list and is suitable for the specified dietary restriction: $dietaryRestriction.
+
+**Formatting Requirements:**
+1. Start with the recipe title on the first line (do not include any introductory text).
+2. On a new line, write 'Ingredients:' and then list all ingredients in a bulleted format (e.g., - 1 cup flour).
+3. On the next line, write 'Instructions:' and then list the cooking steps in a numbered format (e.g., 1. Preheat the oven to 350°F).
+4. At the end, write 'END' on a new line.
+
+**Example Format:**
+Recipe Title
+
+Ingredients:
+- Ingredient 1
+- Ingredient 2
+
+Instructions:
+1. Step one.
+2. Step two.
+
+END
+
+**Important:**
+- Include the title, ingredients, and instructions as specified.
+- Do not include any additional text or explanations.",
             'prompt_template' => "``\n\n{system_prompt}\n\n{prompt}\n\n``",
             'stop_sequences' => "END",
-            'temperature' => 0.2,
+            'temperature' => 1,
         ]
     ];
 
